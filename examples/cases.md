@@ -15,6 +15,29 @@ examples/
 
 ---
 
+## 所有示例快速浏览
+
+**通用场景**（8 个示例）：
+1. [需求验证](common/requirement.md) - 需求初期快速验证，识别不完整的关键点
+2. [设计验证](common/design.md) - 技术方案可行性验证，缓存/数据库架构
+3. [代码审查](common/code.md) - 代码质量检查，错误处理、参数验证
+4. [项目规划](common/project.md) - 新项目 MVP 规划，分阶段实施
+5. [完整需求确认](common/complete.md) - 成熟需求的快速确认，给出可执行信号
+6. [技术选型验证](common/tech-stack.md) - 全栈技术选型，服务边界和数据流
+7. [性能分析](common/performance.md) - 性能问题定位，数据库查询优化
+8. [安全审查](common/security.md) - 安全漏洞识别，SQL 注入等严重风险
+
+**后端开发**（1 个示例）：
+9. [API 设计](backend/api-design.md) - REST API 规范设计，分页、搜索、认证
+
+**前端开发**（1 个示例）：
+10. [组件设计](frontend/component-design.md) - React 组件架构，状态管理、性能优化
+
+**AI Agent 系统**（1 个示例）：
+11. [Agent 系统设计](ai-agent/agent-system.md) - 智能客服 Agent，意图识别、知识库检索
+
+---
+
 ## 通用场景 (Common)
 
 | 示例 | 文件 | 描述 |

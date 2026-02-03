@@ -1,9 +1,20 @@
-# Changelog
+## [0.2.1] - 2026-02-03
 
-All notable changes to the meta-6a skill will be documented in this file.
+### Fixed
+- **命名混淆问题**：在 SKILL.md 添加"命名说明"章节，解释 meta-6a 历史名称与 5A 核心框架的关系
+- **AIAgent 决策点模糊**：明确 5 个具体触发条件（LLM API、Agent 角色、Agent 能力、Agent 交互、用户明确提到）
+- **README 安装说明不完整**：添加 GitHub 仓库链接和详细安装步骤（3 步：克隆、复制、验证）
+- **示例导航不便**：在 cases.md 添加"所有示例快速浏览"章节，提供 11 个示例的摘要
+- **触发词重叠**：统一触发词定义，将"6A检查"从 quick_check 移至 medium_check
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### Changed
+- **示例结构保持不变**：评估后决定不整合 11 个示例文件（符合 KISS 和 DRY 原则）
+- **medium_check 模式保留**：填补快速验证（< 10秒）和完整分析（< 60秒）之间的空白
+
+### Improved
+- 文档一致性：所有 P0 和 P1 问题（RedTeam 批判）已解决
+- 用户体验：更清晰的安装说明和示例导航
+- 框架可理解性：命名说明章节减少了用户的困惑
 
 ## [0.2.0] - 2026-02-03
 

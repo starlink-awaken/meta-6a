@@ -2,7 +2,7 @@
 
 > 可在任何 AI 系统中使用的 5A 核心框架 + 扩展模块 skill
 >
-> 版本：v0.2.0 | 打包位置：~/workspace/skills/meta-6a/
+> 版本：v0.2.1 | 打包位置：~/workspace/skills/meta-6a/
 
 ---
 
@@ -477,7 +477,7 @@ AI: [第一性原理分析]
 
 **创建者**: PAI (Personal AI Infrastructure)
 **打包日期**: 2026-02-03
-**版本**: v0.2.0
+**版本**: v0.2.1
 **许可证**: MIT License
 
 ---

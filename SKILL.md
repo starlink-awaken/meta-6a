@@ -1,11 +1,33 @@
 ---
 name: meta-6a
-version: 0.2.0
-description: 5A核心框架+扩展模块的结构化思维验证. USE WHEN 需要结构化思维框架验证需求/设计/代码的完整性和可行性，或进行软件开发全生命周期的系统化分析. 与 FirstPrinciples（挑战假设）、Council（多代理辩论）不同，Meta6A 聚焦于结构化覆盖度验证. 核心框架包含5个阶段，支持按需加载扩展模块（如AIAgent）. 支持快速验证和完整分析两种模式.
+version: 0.2.1
+description: 5A核心框架+扩展模块的结构化思维验证. USE WHEN 需要结构化思维框架验证需求/设计/代码的完整性和可行性，或进行软件开发全生命周期的系统化分析. 与 FirstPrinciples（挑战假设）、Council（多代理辩论）不同，Meta6A 聚焦于结构化覆盖度验证. 核心框架包含5个阶段，支持按需加载扩展模块（如AIAgent）. 支持快速验证、中等分析和完整分析三种模式.
 last_updated: 2026-02-03
 ---
 
 # meta-6a Skill
+
+## 命名说明
+
+> **"meta-6a" 是历史名称，实际框架是 5A 核心**
+
+**为什么叫 meta-6a？**
+- 初始设计（v0.1.0）包含 6 个阶段：AIAnalyze、AIArchitect、AIAgent、AIArtifact、AIApply、AIAdvise
+- v0.2.0 重构为 **5A 核心框架** + 可选扩展模块架构
+- AIAgent 从核心阶段移至 AI Agent 扩展模块
+- AIArtifact → AIBuild（更清晰的动词命名）
+- AIAdvise → AIImprove（更清晰的动词命名）
+
+**为什么保持 meta-6a 名称？**
+- 向后兼容：现有触发词（"6A检查"等）继续有效
+- 避免混淆：v0.2.0 已经是 breaking change，不改名减少用户困扰
+- 语义保留："6A" 代表完整框架（5A 核心 + AIAgent 扩展 = 6 个 A）
+
+**实际使用**：
+- 大多数项目使用 **5A 核心**（AIAnalyze、AIArchitect、AIBuild、AIApply、AIImprove）
+- AI Agent 项目使用 **5A + AIAgent 扩展**（相当于原来的 6A）
+
+---
 
 ## 5A 核心框架 + 扩展模块
 
@@ -26,8 +48,15 @@ last_updated: 2026-02-03
 **AIAgent 扩展**（AI Agent 项目专用）：
 
 > **决策点**：本项目是否需要设计 AI 智能体？
-> - **是**（AI Agent 项目）→ 在 AIArchitect 和 AIBuild 之间插入 AIAgent 扩展
-> - **否**（其他项目）→ 使用核心 5A 流程
+>
+> **满足以下任一条件** → 插入 AIAgent 扩展：
+> - ✅ 项目涉及 LLM API 调用（ChatGPT、Claude、GPT-4 等）
+> - ✅ 需要设计 Agent 角色（如"代码审查 Agent"、"客服 Agent"）
+> - ✅ 需要定义 Agent 能力和工具（如"Agent 可以访问文件系统"、"Agent 可以执行代码"）
+> - ✅ 需要规划 Agent 交互模式（如"多 Agent 协作"、"Agent 人类协作"）
+> - ✅ 用户明确提到"AI Agent"、"智能体"、"多代理系统"
+>
+> **否则** → 使用标准 5A 核心流程
 
 **AIAgent 扩展内容**：
 - 设计智能体角色和职责
@@ -46,7 +75,7 @@ last_updated: 2026-02-03
 
 | 用户输入 | 工作流 | 说明 | 输出深度 |
 |---------|--------|------|----------|
-| 快速验证触发词：<br>"验证6A" "检查6A" "6A检查" "meta-check" "验证一下" | `Workflows/quick_check.md` | 快速验证 | 简洁（< 200词，< 10秒） |
+| 快速验证触发词：<br>"验证6A" "检查6A" "meta-check" "验证一下" | `Workflows/quick_check.md` | 快速验证 | 简洁（< 200词，< 10秒） |
 | 中等分析触发词：<br>"6A检查" "medium-check" "中等分析" | `Workflows/medium_check.md` | 中等深度分析 | 中等（300-500词，< 30秒） |
 | 完整分析触发词：<br>"完整6A" "6A分析" "deep-analysis" "完整分析" "深度分析" | `Workflows/full_analysis.md` | 完整分析 | 详细（无限制，< 60秒） |
 | 框架说明触发词：<br>"6A框架" "6A说明" "什么是6A" "6A是什么" | 内嵌 prompt（见下方框架介绍） | 框架介绍 | 中等（300-500词） |

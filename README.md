@@ -2,13 +2,35 @@
 
 > 轻量级 5A 核心框架 + 扩展模块的结构化思维验证 skill
 >
-> 版本：v0.2.0 | 基于 Council 多代理辩论设计
+> 版本：v0.2.1 | 基于 Council 多代理辩论设计
 
 ## 快速开始
 
 ### 安装
 
-本 skill 已安装在：
+**方式1：从 GitHub 安装（推荐）**
+
+```bash
+# 1. 克隆仓库到本地
+git clone https://github.com/starlink-awaken/meta-6a.git ~/meta-6a-temp
+
+# 2. 复制到 Claude skills 目录
+cp -r ~/meta-6a-temp ~/.claude/skills/meta-6a
+
+# 3. 清理临时文件
+rm -rf ~/meta-6a-temp
+
+# 4. 验证安装
+ls ~/.claude/skills/meta-6a/SKILL.md
+```
+
+**方式2：手动下载**
+
+1. 访问 [GitHub 仓库](https://github.com/starlink-awaken/meta-6a)
+2. 下载 ZIP 文件并解压
+3. 将 `meta-6a` 文件夹复制到 `~/.claude/skills/`
+
+**当前安装位置**：
 ```
 ~/.claude/skills/meta-6a/
 ```
@@ -19,12 +41,18 @@
 ```
 User: 验证6A [你的需求/设计/代码]
 User: 检查6A [你的需求/设计/代码]
-User: 6A检查 [你的需求/设计/代码]
 User: meta-check [你的需求/设计/代码]
 User: 验证一下 [你的需求/设计/代码]
 ```
 
-**方式2：完整分析**
+**方式2：中等分析**
+```
+User: 6A检查 [你的需求/设计/代码]
+User: medium-check [你的需求/设计/代码]
+User: 中等分析 [你的需求/设计/代码]
+```
+
+**方式3：完整分析**
 ```
 User: 完整6A分析 [你的项目]
 User: deep-analysis [你的项目]
@@ -297,6 +325,12 @@ jobs:
 
 ## 版本历史
 
+- **v0.2.1** (2026-02-03):
+  - 修复命名混淆问题：添加命名说明章节
+  - 明确 AIAgent 扩展的 5 个触发条件
+  - 完善安装文档：添加 GitHub 仓库链接和详细步骤
+  - 优化示例导航：添加"所有示例快速浏览"章节
+  - 统一触发词定义：移除 quick_check 中的"6A检查"
 - **v0.2.0** (2026-02-03):
   - **[BREAKING]** 重构为 5A 核心框架 + 扩展模块架构
   - AIArtifact 重命名为 AIBuild
