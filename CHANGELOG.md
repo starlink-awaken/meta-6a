@@ -5,6 +5,31 @@ All notable changes to the meta-6a skill will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-02-03
+
+### Breaking Changes
+- **框架重构**：从 6A 固定框架重构为 5A 核心框架 + 可选扩展模块架构
+- **阶段重命名**：
+  - `AIArtifact` → `AIBuild`（更清晰的动词命名）
+  - `AIAdvise` → `AIImprove`（更清晰的动词命名）
+- **AIAgent 变更**：从核心阶段移至 AI Agent 扩展模块
+
+### Added
+- **扩展模块系统**：支持按需加载领域特定扩展
+  - **AIAgent 扩展**：AI Agent 项目专用，在 AIArchitect 和 AIBuild 之间插入
+- **决策点明确化**：清晰定义何时加载 AIAgent 扩展的判断条件
+
+### Changed
+- **框架命名**：meta-6a 名称保持不变（历史兼容），但实际使用 5A 核心
+- **触发词兼容**：现有所有触发词保持有效（"6A"等触发词仍可用）
+
+### Migration Guide
+从 v0.1.x 升级到 v0.2.0：
+1. 核心流程从 6 阶段变为 5 阶段
+2. AI Agent 项目会自动加载 AIAgent 扩展（相当于原第3阶段）
+3. 现有触发词无需修改，继续有效
+4. 工作流文件需要更新阶段名称（AIArtifact→AIBuild, AIAdvise→AIImprove）
+
 ## [0.1.1] - 2026-02-03
 
 ### Added

@@ -1,28 +1,31 @@
 # meta-6a Skill - 独立使用指南
 
-> 可在任何 AI 系统中使用的 6A 思维框架 skill
+> 可在任何 AI 系统中使用的 5A 核心框架 + 扩展模块 skill
 >
-> 版本：v0.1.1 | 打包位置：~/workspace/skills/meta-6a/
+> 版本：v0.2.0 | 打包位置：~/workspace/skills/meta-6a/
 
 ---
 
 ## 📋 概述
 
-**meta-6a** 是一个轻量级的 AI skill，提供 6A 思维框架验证和结构化分析能力。
+**meta-6a** 是一个轻量级的 AI skill，提供 5A 核心框架和可扩展模块的结构化思维验证能力。
 
 **核心特性**：
 - ✅ 轻量级：~170 行 markdown，零代码依赖
 - ✅ 快速：验证 < 10秒，分析 < 60秒
 - ✅ 易用：自然语言触发，无需学习
 - ✅ 灵活：默认简洁，可选深入
+- ✅ 可扩展：支持领域特定扩展模块
 
-**6A 框架**：
-1. **AIAnalyze** - 分析现状、识别问题
-2. **AIArchitect** - 设计方案、规划架构
-3. **AIAgent** - 设计智能体、定义角色
-4. **AIArtifact** - 构建产物、编写代码
-5. **AIApply** - 应用部署、测试验证
-6. **AIAdvise** - 持续优化、迭代改进
+**5A 核心框架**：
+1. **AIAnalyze** - 分析现状、识别问题、明确边界
+2. **AIArchitect** - 设计方案、规划架构、定义接口
+3. **AIBuild** - 构建产物、编写代码、生成文档
+4. **AIApply** - 应用部署、测试验证、验证功能
+5. **AIImprove** - 持续优化、迭代改进、收集反馈
+
+**扩展模块**：
+- **AIAgent 扩展**（AI Agent 项目专用）：在 AIArchitect 和 AIBuild 之间插入
 
 ---
 
@@ -88,14 +91,16 @@ AI.generate(prompt)
 
 You are equipped with the meta-6a thinking framework.
 
-When user requests verification or analysis, apply the 6A framework:
+When user requests verification or analysis, apply the 5A core framework:
 
 1. **AIAnalyze** - Quickly scan: core problem? complete? boundaries?
 2. **AIArchitect** - Assess: feasible? risks? complexity?
-3. **AIAgent** - (if needed)
-4. **AIArtifact** - (if needed)
-5. **AIApply** - (if needed)
-6. **AIAdvise** - (if needed)
+3. **AIBuild** - (if needed)
+4. **AIApply** - (if needed)
+5. **AIImprove** - (if needed)
+
+Extension modules (load as needed):
+- **AIAgent** - For AI Agent projects (insert between AIArchitect and AIBuild)
 
 Output format: Quick Check (default) or Full Analysis (on request)
 ```
@@ -149,7 +154,7 @@ meta-6a/
 
 **SKILL.md**
 - YAML frontmatter：name、version、description、last_updated
-- 6A 框架介绍（包含 AIAgent 决策点定义）
+- 5A 核心框架介绍 + 扩展模块系统
 - 核心原则
 - 工作流路由表（统一的触发词定义）
 - 使用示例
@@ -162,8 +167,8 @@ meta-6a/
 - 质量门控
 
 **Workflows/full_analysis.md**
-- 完整的 6 个阶段分析模板
-- AIAgent 决策点处理
+- 完整的 5 个核心阶段分析模板（或 5A+扩展）
+- 扩展模块决策点处理
 - 详细输出格式（无词数限制）
 - 与快速验证的对比说明
 
@@ -200,7 +205,7 @@ meta-6a/
 
 **输出**：
 ```
-✅ 6A快速验证
+✅ 5A快速验证
 
 📊 问题识别
 - 核心问题：[一句话]
@@ -234,12 +239,12 @@ meta-6a/
 - `深度分析`
 
 **输出**：
-- 完整的 6A 各阶段分析
+- 完整的 5A 各阶段分析（或 5A+扩展）
 - 每个阶段的详细建议
 - 系统性思考框架
 
 **特点**：
-- 全面（6 个阶段）
+- 全面（5 个核心阶段 + 扩展模块）
 - 深入（具体建议）
 - 系统（结构化）
 
@@ -253,7 +258,7 @@ meta-6a/
 用户: 验证6A "开发一个用户评论功能"
 
 AI 输出:
-✅ 6A快速验证
+✅ 5A快速验证
 📊 问题识别: 功能清晰但缺少数据模型设计
 🎯 关键建议:
   1. 数据模型：嵌套结构？多级回复存储？
@@ -269,7 +274,7 @@ AI 输出:
 用户: 6A检查 "代码：getUser(id) { return db.query('SELECT * FROM users WHERE id = ?', [id]); }"
 
 AI 输出:
-✅ 6A快速验证
+✅ 5A快速验证
 📊 问题识别: 功能正确但缺少防护
 🎯 关键建议:
   1. 参数验证
@@ -285,7 +290,7 @@ AI 输出:
 用户: 检查6A "使用 Redis + MySQL + Vue3"
 
 AI 输出:
-✅ 6A快速验证
+✅ 5A快速验证
 📊 问题识别: 技术栈合理但缺少架构细节
 🎯 关键建议:
   1. 缓存策略设计
@@ -377,14 +382,19 @@ AI: [第一性原理分析]
 
 ## 🎓 学习资源
 
-### 理解 6A 框架
+### 理解 5A 核心框架
 
 1. **AIAnalyze**: 快速扫描问题、检查完整性、明确边界
 2. **AIArchitect**: 评估可行性、识别风险、规划结构
-3. **AIAgent**: 设计 AI 角色、定义交互、规划能力
-4. **AIArtifact**: 构建代码、编写文档、生成资源
-5. **AIApply**: 部署系统、集成测试、验证功能
-6. **AIAdvise**: 收集反馈、迭代优化、持续改进
+3. **AIBuild**: 构建代码、编写文档、生成资源
+4. **AIApply**: 部署系统、集成测试、验证功能
+5. **AIImprove**: 收集反馈、迭代优化、持续改进
+
+### 扩展模块
+
+**AIAgent 扩展**（仅 AI Agent 项目）：
+- 设计 AI 角色、定义交互、规划能力
+- 在 AIArchitect 和 AIBuild 之间插入
 
 ### 实践建议
 
@@ -467,7 +477,7 @@ AI: [第一性原理分析]
 
 **创建者**: PAI (Personal AI Infrastructure)
 **打包日期**: 2026-02-03
-**版本**: v0.1.1
+**版本**: v0.2.0
 **许可证**: MIT License
 
 ---

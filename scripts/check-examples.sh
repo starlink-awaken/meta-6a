@@ -10,28 +10,63 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
+# 输出格式（默认 text，可选 json）
+OUTPUT_FORMAT="text"
+
+# 解析参数
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --json)
+            OUTPUT_FORMAT="json"
+            shift
+            ;;
+        *)
+            # 未知参数，忽略
+            shift
+            ;;
+    esac
+done
+
 # 计数器
 TOTAL_CHECKS=0
 PASSED_CHECKS=0
 
 # 打印函数
 print_header() {
-    echo -e "\n${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${BLUE}$1${NC}"
-    echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}\n"
+    if [[ "$OUTPUT_FORMAT" == "text" ]]; then
+        echo -e "\n${BLUE}═══════════════════════════════════════════════════════════════${NC}"
+        echo -e "${BLUE}$1${NC}"
+        echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}\n"
+    fi
 }
 
 print_section() {
-    echo -e "\n${YELLOW}▶ $1${NC}\n"
+    if [[ "$OUTPUT_FORMAT" == "text" ]]; then
+        echo -e "\n${YELLOW}▶ $1${NC}\n"
+    fi
 }
 
 print_check() {
     ((TOTAL_CHECKS++))
     if [ "$2" = "PASS" ]; then
-        echo -e "${GREEN}✓ [${TOTAL_CHECKS}]${NC} $1"
+        if [[ "$OUTPUT_FORMAT" == "json" ]]; then
+            echo "{\"status\": \"pass\", \"check\": \"$1\"}"
+        else
+            echo -e "${GREEN}✓ [${TOTAL_CHECKS}]${NC} $1"
+        fi
         ((PASSED_CHECKS++))
+    elif [ "$2" = "WARN" ]; then
+        if [[ "$OUTPUT_FORMAT" == "json" ]]; then
+            echo "{\"status\": \"warn\", \"check\": \"$1\"}"
+        else
+            echo -e "${YELLOW}⚠ [${TOTAL_CHECKS}]${NC} $1"
+        fi
     else
-        echo -e "${RED}✗ [${TOTAL_CHECKS}]${NC} $1"
+        if [[ "$OUTPUT_FORMAT" == "json" ]]; then
+            echo "{\"status\": \"fail\", \"check\": \"$1\"}"
+        else
+            echo -e "${RED}✗ [${TOTAL_CHECKS}]${NC} $1"
+        fi
     fi
 }
 
@@ -40,17 +75,23 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKILL_ROOT="$(dirname "$SCRIPT_DIR")"
 EXAMPLES_FILE="$SKILL_ROOT/examples/cases.md"
 
-echo -e "${BLUE}"
-echo "╔═══════════════════════════════════════════════════════════════╗"
-echo "║        meta-6a Skill 示例验证 v0.1.1                         ║"
-echo "╚═══════════════════════════════════════════════════════════════╝"
-echo -e "${NC}"
-print_header "示例质量验证"
-echo "示例文件: $EXAMPLES_FILE"
-echo "检查时间: $(date '+%Y-%m-%d %H:%M:%S')"
+if [[ "$OUTPUT_FORMAT" == "text" ]]; then
+    echo -e "${BLUE}"
+    echo "╔═══════════════════════════════════════════════════════════════╗"
+    echo "║        meta-6a Skill 示例验证 v0.1.1                         ║"
+    echo "╚═══════════════════════════════════════════════════════════════╝"
+    echo -e "${NC}"
+    print_header "示例质量验证"
+    echo "示例文件: $EXAMPLES_FILE"
+    echo "检查时间: $(date '+%Y-%m-%d %H:%M:%S')"
+fi
 
 if [ ! -f "$EXAMPLES_FILE" ]; then
-    echo -e "${RED}错误: 示例文件不存在${NC}"
+    if [[ "$OUTPUT_FORMAT" == "json" ]]; then
+        echo "{\"error\": \"示例文件不存在\"}"
+    else
+        echo -e "${RED}错误: 示例文件不存在${NC}"
+    fi
     exit 1
 fi
 
@@ -225,22 +266,30 @@ done
 # ============================================================================
 # 总结
 # ============================================================================
-print_header "验证总结"
-
-PASS_RATE=$((PASSED_CHECKS * 100 / TOTAL_CHECKS))
-
-echo -e "总检查数: ${TOTAL_CHECKS}"
-echo -e "${GREEN}通过: $PASSED_CHECKS${NC}"
-echo -e "${RED}失败: $((TOTAL_CHECKS - PASSED_CHECKS))${NC}"
-echo -e "通过率: ${PASS_RATE}%"
-
-if [ $PASS_RATE -ge 90 ]; then
-    echo -e "\n${GREEN}🎉 示例质量优秀！（通过率 ≥ 90%）${NC}\n"
-    exit 0
-elif [ $PASS_RATE -ge 70 ]; then
-    echo -e "\n${YELLOW}⚠️  示例质量良好，但有改进空间（通过率 70-89%）${NC}\n"
-    exit 0
+if [[ "$OUTPUT_FORMAT" == "json" ]]; then
+    # JSON 格式总结
+    FAILED_CHECKS=$((TOTAL_CHECKS - PASSED_CHECKS))
+    PASS_RATE=$((PASSED_CHECKS * 100 / TOTAL_CHECKS))
+    echo "{\"total\": $TOTAL_CHECKS, \"passed\": $PASSED_CHECKS, \"failed\": $FAILED_CHECKS, \"pass_rate\": ${PASS_RATE}%}"
 else
-    echo -e "\n${RED}❌ 示例质量需要改进（通过率 < 70%）${NC}\n"
-    exit 1
+    # 文本格式总结
+    print_header "验证总结"
+
+    PASS_RATE=$((PASSED_CHECKS * 100 / TOTAL_CHECKS))
+
+    echo -e "总检查数: ${TOTAL_CHECKS}"
+    echo -e "${GREEN}通过: $PASSED_CHECKS${NC}"
+    echo -e "${RED}失败: $((TOTAL_CHECKS - PASSED_CHECKS))${NC}"
+    echo -e "通过率: ${PASS_RATE}%"
+
+    if [ $PASS_RATE -ge 90 ]; then
+        echo -e "\n${GREEN}🎉 示例质量优秀！（通过率 ≥ 90%）${NC}\n"
+        exit 0
+    elif [ $PASS_RATE -ge 70 ]; then
+        echo -e "\n${YELLOW}⚠️  示例质量良好，但有改进空间（通过率 70-89%）${NC}\n"
+        exit 0
+    else
+        echo -e "\n${RED}❌ 示例质量需要改进（通过率 < 70%）${NC}\n"
+        exit 1
+    fi
 fi

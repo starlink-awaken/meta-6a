@@ -1,6 +1,6 @@
 #!/bin/bash
 # meta-6a Skill 质量检查脚本
-# 版本：v0.1.1
+# 版本：v0.2.0
 # 用途：自动化检查 skill 的完整性、一致性和格式正确性
 
 # 颜色定义
@@ -10,6 +10,23 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+# 输出格式（默认 text，可选 json）
+OUTPUT_FORMAT="text"
+
+# 解析参数
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --json)
+            OUTPUT_FORMAT="json"
+            shift
+            ;;
+        *)
+            # 未知参数，忽略
+            shift
+            ;;
+    esac
+done
+
 # 计数器
 FAILURES=0
 PASSES=0
@@ -17,27 +34,43 @@ WARNINGS=0
 
 # 打印函数
 print_header() {
-    echo -e "\n${BLUE}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${BLUE}$1${NC}"
-    echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}\n"
+    if [[ "$OUTPUT_FORMAT" == "text" ]]; then
+        echo -e "\n${BLUE}═══════════════════════════════════════════════════════════════${NC}"
+        echo -e "${BLUE}$1${NC}"
+        echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}\n"
+    fi
 }
 
 print_section() {
-    echo -e "\n${YELLOW}▶ $1${NC}\n"
+    if [[ "$OUTPUT_FORMAT" == "text" ]]; then
+        echo -e "\n${YELLOW}▶ $1${NC}\n"
+    fi
 }
 
 print_pass() {
-    echo -e "${GREEN}✓ PASS${NC}: $1"
+    if [[ "$OUTPUT_FORMAT" == "json" ]]; then
+        echo "{\"status\": \"pass\", \"message\": \"$1\"}"
+    else
+        echo -e "${GREEN}✓ PASS${NC}: $1"
+    fi
     ((PASSES++))
 }
 
 print_fail() {
-    echo -e "${RED}✗ FAIL${NC}: $1"
+    if [[ "$OUTPUT_FORMAT" == "json" ]]; then
+        echo "{\"status\": \"fail\", \"message\": \"$1\"}"
+    else
+        echo -e "${RED}✗ FAIL${NC}: $1"
+    fi
     ((FAILURES++))
 }
 
 print_warn() {
-    echo -e "${YELLOW}⚠ WARN${NC}: $1"
+    if [[ "$OUTPUT_FORMAT" == "json" ]]; then
+        echo "{\"status\": \"warn\", \"message\": \"$1\"}"
+    else
+        echo -e "${YELLOW}⚠ WARN${NC}: $1"
+    fi
     ((WARNINGS++))
 }
 
@@ -45,17 +78,19 @@ print_warn() {
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SKILL_ROOT="$(dirname "$SCRIPT_DIR")"
 
-echo -e "${BLUE}"
-echo "██╗      ██████╗ ███████╗████████╗███████╗██████╗ ███╗   ███╗"
-echo "██║     ██╔═══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗████╗ ████║"
-echo "██║     ██║   ██║███████╗   ██║   █████╗  ██║  ██║██╔████╔██║"
-echo "██║     ██║   ██║╚════██║   ██║   ██╔══╝  ██║  ██║██║╚██╔╝██║"
-echo "███████╗╚██████╔╝███████║   ██║   ███████╗██████╔╝██║ ╚═╝ ██║"
-echo "╚══════╝ ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═════╝ ╚═╝     ╚═╝"
-echo -e "${NC}"
-print_header "meta-6a Skill 质量检查 v0.1.1"
-echo "Skill 路径: $SKILL_ROOT"
-echo "检查时间: $(date '+%Y-%m-%d %H:%M:%S')"
+if [[ "$OUTPUT_FORMAT" == "text" ]]; then
+    echo -e "${BLUE}"
+    echo "██╗      ██████╗ ███████╗████████╗███████╗██████╗ ███╗   ███╗"
+    echo "██║     ██╔═══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗████╗ ████║"
+    echo "██║     ██║   ██║███████╗   ██║   █████╗  ██║  ██║██╔████╔██║"
+    echo "██║     ██║   ██║╚════██║   ██║   ██╔══╝  ██║  ██║██║╚██╔╝██║"
+    echo "███████╗╚██████╔╝███████║   ██║   ███████╗██████╔╝██║ ╚═╝ ██║"
+    echo "╚══════╝ ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═════╝ ╚═╝     ╚═╝"
+    echo -e "${NC}"
+    print_header "meta-6a Skill 质量检查 v0.2.0"
+    echo "Skill 路径: $SKILL_ROOT"
+    echo "检查时间: $(date '+%Y-%m-%d %H:%M:%S')"
+fi
 
 # ============================================================================
 # 检查 1：文件完整性
@@ -68,6 +103,7 @@ REQUIRED_FILES=(
     "USAGE.md"
     "CHANGELOG.md"
     "Workflows/quick_check.md"
+    "Workflows/medium_check.md"
     "Workflows/full_analysis.md"
     "examples/cases.md"
 )
@@ -98,11 +134,11 @@ if [ -f "$SKILL_FILE" ]; then
             print_fail "name 字段缺失或错误"
         fi
 
-        if grep -q "^version: 0\.1\.1" "$SKILL_FILE"; then
-            print_pass "version 字段为 0.1.1"
+        if grep -q "^version: 0\.2\.0" "$SKILL_FILE"; then
+            print_pass "version 字段为 0.2.0"
         else
             VERSION=$(grep "^version:" "$SKILL_FILE" | cut -d' ' -f2)
-            print_warn "version 字段为 $VERSION（期望 0.1.1）"
+            print_warn "version 字段为 $VERSION（期望 0.2.0）"
         fi
 
         if grep -q "^description:" "$SKILL_FILE"; then
@@ -207,21 +243,28 @@ else
 fi
 
 # ============================================================================
-# 检查 5：AIAgent 决策点定义
+# 检查 5：扩展模块定义
 # ============================================================================
-print_section "检查 5/6：AIAgent 决策点定义"
+print_section "检查 5/6：扩展模块定义"
 
-if grep -q "决策点" "$SKILL_ROOT/SKILL.md"; then
-    print_pass "SKILL.md 包含决策点定义"
+if grep -q "扩展模块" "$SKILL_ROOT/SKILL.md"; then
+    print_pass "SKILL.md 包含扩展模块定义"
 
-    # 检查是否在 AIAgent 阶段
-    if grep -B 5 "AIAgent" "$SKILL_ROOT/SKILL.md" | grep -q "决策点"; then
-        print_pass "决策点定义在 AIAgent 阶段附近"
+    # 检查 AIAgent 扩展
+    if grep -q "AIAgent 扩展" "$SKILL_ROOT/SKILL.md"; then
+        print_pass "包含 AIAgent 扩展定义"
     else
-        print_warn "决策点定义位置可能不正确"
+        print_warn "缺少 AIAgent 扩展定义"
+    fi
+
+    # 检查决策点
+    if grep -q "决策点" "$SKILL_ROOT/SKILL.md"; then
+        print_pass "包含扩展模块决策点定义"
+    else
+        print_warn "缺少扩展模块决策点定义"
     fi
 else
-    print_fail "缺少 AIAgent 决策点定义"
+    print_fail "缺少扩展模块定义"
 fi
 
 # ============================================================================
@@ -233,10 +276,10 @@ check_version() {
     local file=$1
     local file_name=$(basename "$file")
 
-    if grep -q "v0\.1\.1\|version: 0\.1\.1\|版本：v0.1.1" "$file"; then
-        print_pass "$file_name 版本号为 0.1.1"
-    elif grep -q "v0\.1\.0\|version: 0\.1\.0" "$file"; then
-        print_fail "$file_name 版本号为 0.1.0（应为 0.1.1）"
+    if grep -q "v0\.2\.0\|version: 0\.2\.0\|版本：v0.2.0" "$file"; then
+        print_pass "$file_name 版本号为 0.2.0"
+    elif grep -q "v0\.1\.1\|version: 0\.1\.1" "$file"; then
+        print_warn "$file_name 版本号为 0.1.1（当前为 0.2.0）"
     else
         print_warn "$file_name 版本号未明确声明"
     fi
@@ -257,16 +300,24 @@ fi
 # ============================================================================
 # 总结
 # ============================================================================
-print_header "检查总结"
+TOTAL_CHECKS=$((PASSES + FAILURES + WARNINGS))
 
-echo -e "${GREEN}通过: $PASSES${NC}"
-echo -e "${YELLOW}警告: $WARNINGS${NC}"
-echo -e "${RED}失败: $FAILURES${NC}"
-
-if [ $FAILURES -eq 0 ]; then
-    echo -e "\n${GREEN}🎉 所有关键检查通过！${NC}\n"
-    exit 0
+if [[ "$OUTPUT_FORMAT" == "json" ]]; then
+    # JSON 格式总结
+    echo "{\"total\": $TOTAL_CHECKS, \"passed\": $PASSES, \"failed\": $FAILURES, \"warnings\": $WARNINGS, \"pass_rate\": $((PASSES * 100 / TOTAL_CHECKS))%}"
 else
-    echo -e "\n${RED}❌ 发现 $FAILURES 个问题，请修复后重试${NC}\n"
-    exit 1
+    # 文本格式总结
+    print_header "检查总结"
+
+    echo -e "${GREEN}通过: $PASSES${NC}"
+    echo -e "${YELLOW}警告: $WARNINGS${NC}"
+    echo -e "${RED}失败: $FAILURES${NC}"
+
+    if [ $FAILURES -eq 0 ]; then
+        echo -e "\n${GREEN}🎉 所有关键检查通过！${NC}\n"
+        exit 0
+    else
+        echo -e "\n${RED}❌ 发现 $FAILURES 个问题，请修复后重试${NC}\n"
+        exit 1
+    fi
 fi
